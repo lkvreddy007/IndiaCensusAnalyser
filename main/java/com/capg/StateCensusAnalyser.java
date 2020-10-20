@@ -40,5 +40,8 @@ public class StateCensusAnalyser {
 		catch(IllegalStateException e) {
 			throw new CensusAnalyserException("Unable to Parse", ExceptionType.UNABLE_TO_PARSE);
 		}
+		catch(RuntimeException e) {
+			throw new CensusAnalyserException("Invalid Delimiter", ExceptionType.ERROR_IN_FILE);
+		}
 	}
 }
