@@ -9,6 +9,7 @@ public class CensusAnalyserTest {
 	StateCensusAnalyser censusAnalyser = new StateCensusAnalyser();
 	private static final String INDIA_CENSUS_CSVFILE_PATH="C:\\Users\\lkvre\\eclipse-workspace\\IndianCensusAnalyser\\src\\test\\resources\\IndiaStateCensusData.csv";
 	private static final String WRONG_CSV_FILE_PATH="./src/main/resources/IndiaStateCensusData.csv";
+	private static final String WRONG_DELIMITER="C:\\Users\\lkvre\\eclipse-workspace\\IndianCensusAnalyser\\src\\test\\resources\\WrongDelimiter.csv";
 	
 	@Test
 	public void givenCensusData_WithWrongFileFormat_ShouldThrowException() {
@@ -41,6 +42,17 @@ public class CensusAnalyserTest {
 		} 
 		catch (CensusAnalyserException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void givenCensusData_WithWrongDelimiter_ShouldThrowException() {
+		try {
+			censusAnalyser.loadCensusData(WRONG_DELIMITER);
+		}
+		catch(CensusAnalyserException e) {
+			System.out.println(e);
+			Assert.assertEquals(ExceptionType.ERROR_IN_FILE, e.exceptionType);
 		}
 	}
 }
