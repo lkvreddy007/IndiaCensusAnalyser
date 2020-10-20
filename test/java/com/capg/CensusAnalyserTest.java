@@ -20,4 +20,15 @@ public class CensusAnalyserTest {
 			Assert.assertEquals(ExceptionType.INVALID_FILE_FORMAT, e.exceptionType);
 		}
 	}
+	
+	@Test
+	public void givenCensusData_WithWrongFilePath_ShouldThrowException() {
+		try {
+			censusAnalyser.loadCensusData(WRONG_CSV_FILE_PATH);
+		}
+		catch(CensusAnalyserException e) {
+			System.out.println(e);
+			Assert.assertEquals(ExceptionType.CENSUS_FILE_PROBLEM, e.exceptionType);
+		}
+	}
 }
