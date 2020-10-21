@@ -18,11 +18,7 @@ public class StateCensusAnalyser {
 			throw new CensusAnalyserException("Invalid File Type(.csv required)", ExceptionType.INVALID_FILE_FORMAT);
 		}
 		try(Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
-			CsvToBeanBuilder<CSVStateCensus> csvToBeanBuilder = new CsvToBeanBuilder<>(reader);
-			csvToBeanBuilder.withType(CSVStateCensus.class);
-			csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);
-			CsvToBean<CSVStateCensus> csvToBean = csvToBeanBuilder.build();
-			Iterator<CSVStateCensus> csvIterable = csvToBean.iterator();
+			Iterator<CSVStateCensus> csvIterable = this.getCSVFileIterator(reader, CSVStateCensus.class);
 			List<CSVStateCensus> statesInfo = new ArrayList<>(); 
 			while(csvIterable.hasNext()) {
 				statesInfo.add(csvIterable.next());
@@ -50,11 +46,7 @@ public class StateCensusAnalyser {
 			throw new CensusAnalyserException("Invalid File Type(.csv required)", ExceptionType.INVALID_FILE_FORMAT);
 		}
 		try(Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
-			CsvToBeanBuilder<CSVStateCodes> csvToBeanBuilder = new CsvToBeanBuilder<>(reader);
-			csvToBeanBuilder.withType(CSVStateCodes.class);
-			csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);
-			CsvToBean<CSVStateCodes> csvToBean = csvToBeanBuilder.build();
-			Iterator<CSVStateCodes> csvIterable = csvToBean.iterator();
+			Iterator<CSVStateCodes> csvIterable = this.getCSVFileIterator(reader, CSVStateCodes.class);
 			List<CSVStateCodes> statesInfo = new ArrayList<>(); 
 			while(csvIterable.hasNext()) {
 				statesInfo.add(csvIterable.next());
@@ -75,5 +67,13 @@ public class StateCensusAnalyser {
 		catch(RuntimeException e) {
 			throw new CensusAnalyserException("Invalid Delimiter", ExceptionType.ERROR_IN_FILE);
 		}
+	}
+	
+	private <E> Iterator<E> getCSVFileIterator(Reader reader,Class<E> csvClass) throws CensusAnalyserException{
+		CsvToBeanBuilder<E> csvToBeanBuilder = new CsvToBeanBuilder<>(reader);
+		csvToBeanBuilder.withType(csvClass);
+		csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);
+		CsvToBean<E> csvToBean = csvToBeanBuilder.build();
+		return csvToBean.iterator();
 	}
 }
