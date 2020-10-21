@@ -15,7 +15,8 @@ public class StateCensusAnalyser {
 			throw new CensusAnalyserException("Invalid File Type(.csv required)", ExceptionType.INVALID_FILE_FORMAT);
 		}
 		try(Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
-			Iterator<CSVStateCensus> csvIterable = new OpenCSVBuilder().getCSVFileIterator(reader, CSVStateCensus.class);
+			ICSVBuilder csvBuilder=CSVBuilderFactory.createCSVBuilder();
+			Iterator<CSVStateCensus> csvIterable = csvBuilder.getCSVFileIterator(reader, CSVStateCensus.class);
 			return this.getCount(csvIterable);
 		}
 		catch (IOException e) {
@@ -34,7 +35,8 @@ public class StateCensusAnalyser {
 			throw new CensusAnalyserException("Invalid File Type(.csv required)", ExceptionType.INVALID_FILE_FORMAT);
 		}
 		try(Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
-			Iterator<CSVStateCodes> csvIterable = new OpenCSVBuilder().getCSVFileIterator(reader, CSVStateCodes.class);
+			ICSVBuilder csvBuilder=CSVBuilderFactory.createCSVBuilder();
+			Iterator<CSVStateCodes> csvIterable = csvBuilder.getCSVFileIterator(reader, CSVStateCodes.class);
 			return this.getCount(csvIterable);
 		}
 		catch (IOException e) {

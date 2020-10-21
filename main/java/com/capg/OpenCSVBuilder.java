@@ -7,8 +7,8 @@ import com.capg.CensusAnalyserException.ExceptionType;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 
-public class OpenCSVBuilder {
-	public <E> Iterator<E> getCSVFileIterator(Reader reader, Class<E> csvClass) throws CensusAnalyserException {
+public class OpenCSVBuilder<E> implements ICSVBuilder {
+	public Iterator<E> getCSVFileIterator(Reader reader, Class csvClass) throws CensusAnalyserException {
 		try {
 			CsvToBeanBuilder<E> csvToBeanBuilder = new CsvToBeanBuilder<>(reader);
 			csvToBeanBuilder.withType(csvClass);
@@ -20,5 +20,4 @@ public class OpenCSVBuilder {
 			throw new CensusAnalyserException("Unable to Parse", ExceptionType.UNABLE_TO_PARSE);
 		}
 	}
-
 }
