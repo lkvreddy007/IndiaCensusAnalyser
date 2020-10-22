@@ -10,7 +10,7 @@ import java.util.stream.StreamSupport;
 import com.capg.CensusAnalyserException.ExceptionType;
 
 public class StateCensusAnalyser {
-	public int loadCensusData(String csvFilePath) throws CensusAnalyserException{
+	public int loadCensusData(String csvFilePath) throws CensusAnalyserException {
 		if(!csvFilePath.contains(".csv")) {
 			throw new CensusAnalyserException("Invalid File Type(.csv required)", ExceptionType.INVALID_FILE_FORMAT);
 		}
@@ -28,9 +28,12 @@ public class StateCensusAnalyser {
 		catch(RuntimeException e) {
 			throw new CensusAnalyserException("Invalid Delimiter", ExceptionType.ERROR_IN_FILE);
 		}
+		catch(CSVException e) {
+			throw new CensusAnalyserException("Unable to parse", ExceptionType.UNABLE_TO_PARSE);
+		}
 	}
 	
-	public int loadStateCodeData(String csvFilePath) throws CensusAnalyserException{
+	public int loadStateCodeData(String csvFilePath) throws CensusAnalyserException {
 		if(!csvFilePath.contains(".csv")) {
 			throw new CensusAnalyserException("Invalid File Type(.csv required)", ExceptionType.INVALID_FILE_FORMAT);
 		}
@@ -47,6 +50,9 @@ public class StateCensusAnalyser {
 		}
 		catch(RuntimeException e) {
 			throw new CensusAnalyserException("Invalid Delimiter", ExceptionType.ERROR_IN_FILE);
+		}
+		catch(CSVException e) {
+			throw new CensusAnalyserException("Unable to parse", ExceptionType.UNABLE_TO_PARSE);
 		}
 	}
 	
