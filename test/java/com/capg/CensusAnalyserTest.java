@@ -62,7 +62,7 @@ public class CensusAnalyserTest {
 		try {
 			censusAnalyser.loadCensusData(INDIA_CENSUS_CSVFILE_PATH);
 			CSVStateCensus[] census = new Gson().fromJson(censusAnalyser.getSortedCensusData(), CSVStateCensus[].class);
-			Assert.assertEquals("Andhra Pradesh", census[0].state);
+			Assert.assertEquals("Andhra Pradesh West Bengal", census[0].state+" "+census[28].state);
 		} 
 		catch (CensusAnalyserException e) {
 			

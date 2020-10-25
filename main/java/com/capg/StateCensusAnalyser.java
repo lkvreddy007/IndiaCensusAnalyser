@@ -14,15 +14,16 @@ import com.capg.CensusAnalyserException.ExceptionType;
 import com.google.gson.Gson;
 
 public class StateCensusAnalyser<E> {
-	List<CSVStateCensus> csvFileList= null;
+	List<CSVStateCensus> csvCensusFileList= null;
+	List<CSVStateCodes> csvStateCodeFileList= null;
 	public int loadCensusData(String csvFilePath) throws CensusAnalyserException {
 		if(!csvFilePath.contains(".csv")) {
 			throw new CensusAnalyserException("Invalid File Type(.csv required)", ExceptionType.INVALID_FILE_FORMAT);
 		}
 		try(Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
 			ICSVBuilder csvBuilder=CSVBuilderFactory.createCSVBuilder();
-			csvFileList = csvBuilder.getCSVList(reader,CSVStateCensus.class);
-			return this.csvFileList.size();
+			csvCensusFileList = csvBuilder.getCSVList(reader,CSVStateCensus.class);
+			return this.csvCensusFileList.size();
 		}
 		catch (IOException e) {
 			throw new CensusAnalyserException("Census File Problem", ExceptionType.CENSUS_FILE_PROBLEM);
@@ -44,8 +45,8 @@ public class StateCensusAnalyser<E> {
 		}
 		try(Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
 			ICSVBuilder csvBuilder=CSVBuilderFactory.createCSVBuilder();
-			csvFileList=csvBuilder.getCSVList(reader, CSVStateCodes.class);
-			return this.csvFileList.size();
+			csvStateCodeFileList=csvBuilder.getCSVList(reader, CSVStateCodes.class);
+			return this.csvStateCodeFileList.size();
 		}
 		catch (IOException e) {
 			throw new CensusAnalyserException("Code File Problem", ExceptionType.CENSUS_FILE_PROBLEM);
@@ -67,14 +68,14 @@ public class StateCensusAnalyser<E> {
 		return numOfEntries;
 	}
 	
-	private void sort(Comparator<CSVStateCensus> comparator){
-		for(int j=0;j<csvFileList.size();j++) {
-			for(int i=0;i<csvFileList.size()-1;i++) {
-				CSVStateCensus state1 = csvFileList.get(i);
-				CSVStateCensus state2 = csvFileList.get(i+1);
+	private void sortCensus(Comparator<CSVStateCensus> comparator){
+		for(int j=0;j<csvCensusFileList.size();j++) {
+			for(int i=0;i<csvCensusFileList.size()-1;i++) {
+				CSVStateCensus state1 = csvCensusFileList.get(i);
+				CSVStateCensus state2 = csvCensusFileList.get(i+1);
 				if(comparator.compare(state1, state2)>0) {
-					csvFileList.set(i, state2);
-					csvFileList.set(i+1, state1);
+					csvCensusFileList.set(i, state2);
+					csvCensusFileList.set(i+1, state1);
 				}
 			}
 		}
@@ -82,12 +83,35 @@ public class StateCensusAnalyser<E> {
 	
 	public String getSortedCensusData() throws CensusAnalyserException{
 		
-		if(csvFileList.size()==0 || csvFileList==null) {
+		if(csvCensusFileList.size()==0 || csvCensusFileList==null) {
 			throw new CensusAnalyserException("Null Values", ExceptionType.NULL_VALUES_ENCOUNTERED);
 		}
 		Comparator<CSVStateCensus> comparator = Comparator.comparing(census->census.state);
-		sort(comparator);
-		String sortedCensusData= new Gson().toJson(csvFileList);
+		sortCensus(comparator);
+		String sortedCensusData= new Gson().toJson(csvCensusFileList);
+		return sortedCensusData;
+	}
+	
+	public void sortStateCodes(Comparator<CSVStateCodes> comparator) {
+		for(int j=0;j<csvCensusFileList.size();j++) {
+			for(int i=0;i<csvCensusFileList.size()-1;i++) {
+				CSVStateCodes state1 = csvStateCodeFileList.get(i);
+				CSVStateCodes state2 = csvStateCodeFileList.get(i+1);
+				if(comparator.compare(state1, state2)>0) {
+					csvStateCodeFileList.set(i, state2);
+					csvStateCodeFileList.set(i+1, state1);
+				}
+			}
+		}
+	}
+	
+	public String getSortedStateCodeData() throws CensusAnalyserException{
+		if(csvStateCodeFileList.size()==0 || csvStateCodeFileList==null) {
+			throw new CensusAnalyserException("Null Values",ExceptionType.NULL_VALUES_ENCOUNTERED );
+		}
+		Comparator<CSVStateCodes> comparator = Comparator.comparing(census->census.stateCode);
+		sortStateCodes(comparator);
+		String sortedCensusData= new Gson().toJson(csvStateCodeFileList);
 		return sortedCensusData;
 	}
 }
