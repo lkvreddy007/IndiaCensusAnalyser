@@ -80,4 +80,16 @@ public class CensusAnalyserTest {
 			
 		}
 	}
+	
+	@Test 
+	public void givenCensusData_WhenSortBasedOnStatePopulationDensity_ShouldReturnSortedList() {
+		try {
+			censusAnalyser.loadCensusData(INDIA_CENSUS_CSVFILE_PATH);
+			CSVStateCensus[] census = new Gson().fromJson(censusAnalyser.getStateCensusSortedByPopulationDensity(), CSVStateCensus[].class);
+			Assert.assertEquals("Arunachal Pradesh Bihar", census[0].state+" "+census[28].state);
+		} 
+		catch (CensusAnalyserException e) {
+			
+		}
+	}
 }
