@@ -1,16 +1,19 @@
 package com.capg;
 
 import java.io.IOException;
+
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
 import com.capg.CensusAnalyserException.ExceptionType;
+import com.google.gson.Gson;
 
-public class StateCensusAnalyser {
+public class StateCensusAnalyser<E> {
 	List<CSVStateCensus> csvFileList= null;
 	public int loadCensusData(String csvFilePath) throws CensusAnalyserException {
 		if(!csvFilePath.contains(".csv")) {
@@ -62,5 +65,28 @@ public class StateCensusAnalyser {
 		Iterable<E> csvIterable=()->iterator;
 		int numOfEntries=(int)StreamSupport.stream(csvIterable.spliterator(), false).count();
 		return numOfEntries;
+	}
+	
+	private void sort(Comparator<CSVStateCensus> comparator){
+		for(CSVStateCensus c:csvFileList) {
+			for(int i=0;i<csvFileList.size();i++) {
+				CSVStateCensus state1 = csvFileList.get(i);
+				CSVStateCensus state2 = csvFileList.get(i+1);
+				if(comparator.compare(state1, state2)>0) {
+					csvFileList.set(i, state2);
+					csvFileList.set(i+1, state1);
+				}
+			}
+		}
+	}
+	
+	public String getSortedCensusData() throws CensusAnalyserException{
+		String sortedCensusData="";
+		if(csvFileList.size()!=0 && csvFileList!=null) {
+			Comparator<CSVStateCensus> comparator = Comparator.comparing(census->census.state);
+			sort(comparator);
+			sortedCensusData= new Gson().toJson(csvFileList);
+		}
+		return sortedCensusData;
 	}
 }
