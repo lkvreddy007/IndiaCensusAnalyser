@@ -68,8 +68,8 @@ public class StateCensusAnalyser<E> {
 	}
 	
 	private void sort(Comparator<CSVStateCensus> comparator){
-		for(CSVStateCensus c:csvFileList) {
-			for(int i=0;i<csvFileList.size();i++) {
+		for(int j=0;j<csvFileList.size();j++) {
+			for(int i=0;i<csvFileList.size()-1;i++) {
 				CSVStateCensus state1 = csvFileList.get(i);
 				CSVStateCensus state2 = csvFileList.get(i+1);
 				if(comparator.compare(state1, state2)>0) {
@@ -81,12 +81,13 @@ public class StateCensusAnalyser<E> {
 	}
 	
 	public String getSortedCensusData() throws CensusAnalyserException{
-		String sortedCensusData="";
-		if(csvFileList.size()!=0 && csvFileList!=null) {
-			Comparator<CSVStateCensus> comparator = Comparator.comparing(census->census.state);
-			sort(comparator);
-			sortedCensusData= new Gson().toJson(csvFileList);
+		
+		if(csvFileList.size()==0 || csvFileList==null) {
+			throw new CensusAnalyserException("Null Values", ExceptionType.NULL_VALUES_ENCOUNTERED);
 		}
+		Comparator<CSVStateCensus> comparator = Comparator.comparing(census->census.state);
+		sort(comparator);
+		String sortedCensusData= new Gson().toJson(csvFileList);
 		return sortedCensusData;
 	}
 }
