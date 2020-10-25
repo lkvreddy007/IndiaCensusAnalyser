@@ -92,4 +92,17 @@ public class CensusAnalyserTest {
 			
 		}
 	}
+	
+	@Test 
+	public void givenCensusData_WhenSortBasedOnStateArea_ShouldReturnSortedList() {
+		try {
+			censusAnalyser.loadCensusData(INDIA_CENSUS_CSVFILE_PATH);
+			CSVStateCensus[] census = new Gson().fromJson(censusAnalyser.getStateCensusSortedByStateArea(), CSVStateCensus[].class);
+			System.out.println(census[0].state+" "+census[28].state);
+			Assert.assertEquals("Goa Rajasthan", census[0].state+" "+census[28].state);
+		} 
+		catch (CensusAnalyserException e) {
+			
+		}
+	}
 }
