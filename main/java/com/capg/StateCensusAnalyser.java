@@ -114,4 +114,14 @@ public class StateCensusAnalyser<E> {
 		String sortedCensusData= new Gson().toJson(csvStateCodeFileList);
 		return sortedCensusData;
 	}
+	
+	public String getStateCensusSortedByPopulation() throws CensusAnalyserException{
+		if(csvCensusFileList.size()==0 || csvCensusFileList==null) {
+			throw new CensusAnalyserException("Null Values", ExceptionType.NULL_VALUES_ENCOUNTERED);
+		}
+		Comparator<CSVStateCensus> comparator = Comparator.comparing(census->census.population);
+		sortCensus(comparator);
+		String sortedCensusData= new Gson().toJson(csvCensusFileList);
+		return sortedCensusData;
+	}
 }
