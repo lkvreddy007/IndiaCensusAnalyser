@@ -67,6 +67,17 @@ public class CensusAnalyserTest {
 		catch (CensusAnalyserException e) {
 			
 		}
-		
+	}
+	
+	@Test 
+	public void givenCensusData_WhenSortBasedOnStatePopulation_ShouldReturnSortedList() {
+		try {
+			censusAnalyser.loadCensusData(INDIA_CENSUS_CSVFILE_PATH);
+			CSVStateCensus[] census = new Gson().fromJson(censusAnalyser.getStateCensusSortedByPopulation(), CSVStateCensus[].class);
+			Assert.assertEquals("Sikkim Uttar Pradesh", census[0].state+" "+census[28].state);
+		} 
+		catch (CensusAnalyserException e) {
+			
+		}
 	}
 }
