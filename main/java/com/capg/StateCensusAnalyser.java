@@ -134,4 +134,14 @@ public class StateCensusAnalyser<E> {
 		String sortedCensusData= new Gson().toJson(csvCensusFileList);
 		return sortedCensusData;
 	}
+	
+	public String getStateCensusSortedByStateArea() throws CensusAnalyserException{
+		if(csvCensusFileList.size()==0 || csvCensusFileList==null) {
+			throw new CensusAnalyserException("Null Values", ExceptionType.NULL_VALUES_ENCOUNTERED);
+		}
+		Comparator<CSVStateCensus> comparator = Comparator.comparing(census->census.areaInSqKm);
+		sortCensus(comparator);
+		String sortedCensusData= new Gson().toJson(csvCensusFileList);
+		return sortedCensusData;
+	}
 }
